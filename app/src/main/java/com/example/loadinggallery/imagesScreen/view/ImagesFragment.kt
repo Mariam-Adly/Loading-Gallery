@@ -14,7 +14,6 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.loadinggallery.databinding.FragmentImagesBinding
-import com.example.loadinggallery.imagesScreen.ImagesAdapter
 import com.example.loadinggallery.model.Pojo
 
 private val REQUEST_CODE = 500
@@ -24,13 +23,10 @@ class ImagesFragment : Fragment() {
     lateinit var imagesAdapter: ImagesAdapter
     lateinit var binding : FragmentImagesBinding
 
-     var pickedPhotos : Uri? = null
-     var pickedBitMap : Bitmap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkPermission()
-       // submitImages()
     }
 
     override fun onCreateView(
@@ -85,8 +81,6 @@ class ImagesFragment : Fragment() {
                 images.add(imageModel)
             }
         }
-
-        Log.i("jessy", "jessy$images: ")
         return images
     }
     fun submitImages(){

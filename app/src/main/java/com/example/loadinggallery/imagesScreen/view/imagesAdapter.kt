@@ -1,16 +1,16 @@
-package com.example.loadinggallery.imagesScreen
+package com.example.loadinggallery.imagesScreen.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.loadinggallery.databinding.ImageItemBinding
 import com.example.loadinggallery.model.Pojo
-import com.example.loadinggallery.databinding.RvItemBinding
 
 class ImagesAdapter (var images : List<Pojo>) : RecyclerView.Adapter<ImagesAdapter.ViewHolder>() {
 
 
-    class ViewHolder (val binding: RvItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder (val binding: ImageItemBinding) : RecyclerView.ViewHolder(binding.root) {
             fun bind(imageModel: Pojo) {
                 Glide.with(itemView)
                     .load(imageModel.galleryPath)
@@ -21,7 +21,7 @@ class ImagesAdapter (var images : List<Pojo>) : RecyclerView.Adapter<ImagesAdapt
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater : LayoutInflater = LayoutInflater.from(parent.context)
-        val binding = RvItemBinding.inflate(inflater, parent, false)
+        val binding = ImageItemBinding.inflate(inflater, parent, false)
         val viewHolder = ViewHolder(binding)
         return viewHolder
     }
