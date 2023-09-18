@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/imagesFragment"
-        android:name="com.example.loadinggallery.imagesScreen.ImagesFragment"
+        android:name="com.example.loadinggallery.imagesScreen.view.ImagesFragment"
         android:label="fragment_images"
         tools:layout="@layout/fragment_images" />
     <fragment
