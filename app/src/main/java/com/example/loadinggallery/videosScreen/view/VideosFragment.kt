@@ -1,20 +1,28 @@
 package com.example.loadinggallery.videosScreen.view
 
 import android.os.Bundle
-import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.loadinggallery.databinding.FragmentVideosBinding
-import com.example.loadinggallery.model.Pojo
-
+import com.example.loadinggallery.datasource.LocalSourceImpl
+import com.example.loadinggallery.imagesScreen.ApiState
+import com.example.loadinggallery.model.Repository
+import com.example.loadinggallery.videosScreen.viewmodel.VideoViewModel
+import com.example.loadinggallery.videosScreen.viewmodel.VideoViewModelFactory
 
 class VideosFragment : Fragment() {
 
      lateinit var videoAdapter: VideoAdapter
      lateinit var binding : FragmentVideosBinding
+     lateinit var videoVM : VideoViewModel
+     lateinit var videoVMF : VideoViewModelFactory
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -25,34 +33,41 @@ class VideosFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentVideosBinding.inflate(inflater, container, false)
-        submitImages()
+        videoVMF = VideoViewModelFactory(
+            Repository.getInstance(
+               LocalSourceImpl(requireContext())
+            ))
+
+        videoVM = ViewModelProvider(this,videoVMF).get(VideoViewModel::class.java)
+        submitVideos()
+        videoVM.getVideosFromGallery(requireActivity())
+        lifecycleScope.launchWhenStarted {
+            videoVM.galleryItem.collect{
+                when(it){
+                    is ApiState.Loading->{
+                        binding.videoItem.isVisible = false
+                    }
+                    is ApiState.Failure -> {
+                        binding.videoItem.isVisible = false
+                    }
+                    is ApiState.Success->{
+                        binding.videoItem.isVisible = true
+                        videoAdapter.submitList(it.data)
+                        videoAdapter.notifyDataSetChanged()
+                    }
+                    is ApiState.Empty->{
+
+                    }
+                }
+            }
+        }
         return binding.root
     }
 
 
-    private fun getVideosFromGallery(): List<Pojo> {
-        val videos = mutableListOf<Pojo>()
-        val projection = arrayOf(MediaStore.Video.Media.DATA)
-        val cursor = requireActivity().contentResolver.query(
-            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-            projection,
-            null,
-            null,
-            null
-        )
-        cursor?.use {
-            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
-            while (cursor.moveToNext()) {
-                val videoPath = cursor.getString(columnIndex)
-                val videoModel = Pojo(videoPath)
-                videos.add(videoModel)
-            }
-        }
-        return videos
-    }
 
-    fun submitImages(){
-        videoAdapter = VideoAdapter(getVideosFromGallery())
+    fun submitVideos(){
+        videoAdapter = VideoAdapter()
         binding.videoItem.adapter = videoAdapter
         binding.videoItem.layoutManager = GridLayoutManager(requireContext(), 3)
     }
