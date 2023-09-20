@@ -11,8 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.loadinggallery.databinding.FragmentVideosBinding
 import com.example.loadinggallery.datasource.LocalSourceImpl
-import com.example.loadinggallery.imagesScreen.ApiState
 import com.example.loadinggallery.model.Repository
+import com.example.loadinggallery.utility.State
 import com.example.loadinggallery.videosScreen.viewmodel.VideoViewModel
 import com.example.loadinggallery.videosScreen.viewmodel.VideoViewModelFactory
 
@@ -44,18 +44,18 @@ class VideosFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             videoVM.galleryItem.collect{
                 when(it){
-                    is ApiState.Loading->{
+                    is State.Loading->{
                         binding.videoItem.isVisible = false
                     }
-                    is ApiState.Failure -> {
+                    is State.Failure -> {
                         binding.videoItem.isVisible = false
                     }
-                    is ApiState.Success->{
+                    is State.Success->{
                         binding.videoItem.isVisible = true
                         videoAdapter.submitList(it.data)
                         videoAdapter.notifyDataSetChanged()
                     }
-                    is ApiState.Empty->{
+                    is State.Empty->{
 
                     }
                 }
