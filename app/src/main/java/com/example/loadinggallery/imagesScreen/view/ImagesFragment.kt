@@ -43,6 +43,7 @@ class ImagesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentImagesBinding.inflate(inflater, container, false)
+
         checkPermission()
         imagesVMF = ImagesViewModelFactory(
             Repository.getInstance(

@@ -2,7 +2,6 @@ package com.example.loadinggallery.imagesScreen.view
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
@@ -10,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.loadinggallery.R
+import com.example.loadinggallery.databinding.ImageItemBinding
 import com.example.loadinggallery.model.Pojo
 
 class ImagesAdapter() : ListAdapter<Pojo, ImagesAdapter.ViewHolder>(MyDifUnit()) {
@@ -18,7 +18,8 @@ class ImagesAdapter() : ListAdapter<Pojo, ImagesAdapter.ViewHolder>(MyDifUnit())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         contxt=parent.context
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.image_item,parent,false)
+        val inflater = LayoutInflater.from(parent.context)
+        val view = ImageItemBinding.inflate(inflater,parent,false)
         return ViewHolder(view)
     }
 
@@ -32,7 +33,7 @@ class ImagesAdapter() : ListAdapter<Pojo, ImagesAdapter.ViewHolder>(MyDifUnit())
     }
 
 
-    inner class ViewHolder (private val itemView: View): RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(private val itemView: ImageItemBinding): RecyclerView.ViewHolder(itemView.root){
 
         val img : ImageView
             get() = itemView.findViewById(R.id.img_item)
